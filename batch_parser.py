@@ -2,8 +2,11 @@ from sequence_generator import Sequence
 import json
 from json_examples import test0
 
+## remove!!!
 # de-serialize json_data
 sequence_list = json.loads(test0.json_data)
+###
+
 
 class BatchSequenceParser(object):
     """Accepts a list of dicts and return a list of Sequence objects that 
@@ -45,8 +48,14 @@ class BatchSequenceParser(object):
             return None
             
         def process_children():
-            counter = 0
-            while len(self.sequence_list) != 0:
+            """TODO: iterate over range(pow(self.sequence_list, 2)) to check
+            that there was no unassigned parent; also, if self.sequence_list is
+            empty, return, since the list is empty"""
+            
+
+            for count in range(len(self.sequence_list)):
+                if not self.sequence_list:
+                    return completed_sequence_list
                 for item in self.sequence_list:
                     next_child = self.sequence_list.pop(0)
                     processed_child = parse_child(next_child)
@@ -54,12 +63,29 @@ class BatchSequenceParser(object):
                         self.sequence_list.append(next_child)
                     else:
                         completed_sequence_list.append(processed_child)
+                
+                
+            # while len(self.sequence_list) != 0:
+            #     for item in self.sequence_list:
+            #         next_child = self.sequence_list.pop(0)
+            #         processed_child = parse_child(next_child)
+            #         if processed_child == None:
+            #             self.sequence_list.append(next_child)
+            #         else:
+            #             completed_sequence_list.append(processed_child)
+
             return completed_sequence_list
         root_parent_index = index_of_root_parent()
         completed_sequence_list.append(self.sequence_list.pop(root_parent_index))
         process_children()
         self.processed_sequence_list = completed_sequence_list
         return None
+
+    
+    
+    # return a list of all lists merged and sorted by duration from beginning of sequence
+    # def merge_lists(self)
+
 
 if __name__ == "__main__":
     b = BatchSequenceParser(sequence_list)

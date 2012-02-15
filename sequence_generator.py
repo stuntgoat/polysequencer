@@ -2,7 +2,13 @@ from math import floor
 
 class Sequence(object):
     """If instantiated with a parent sequence, bpm will be none and 
-    a relation_dict will be in the format: {'parent': 4, 'self': 5}
+    a relation_dict will be in the format: {'parent': 4, 'self': 5};
+    duration is the total count of pulses
+    interval is the duration between pulses
+    alias is a string name for this sequence
+    
+    
+
 
     If parent == None, self is a root parent; bpm must
     be > 0; relation_dict must == None
@@ -19,7 +25,6 @@ class Sequence(object):
         self.filename = file_name
         self.parent_object = None
         self.alias = alias
-    
 
     def calculate_interval(self):
         """ Root parents caclulate duration from self.bpm; 
