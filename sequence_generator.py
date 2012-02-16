@@ -25,6 +25,7 @@ class Sequence(object):
         self.filename = file_name
         self.parent_object = None
         self.alias = alias
+        self.interval_filename_tuple_list = []
 
     def calculate_interval(self):
         """ Root parents caclulate duration from self.bpm; 
@@ -49,16 +50,31 @@ class Sequence(object):
     def calculate_timing_list(self):
         """Calculate timing as list of incrementing sum of durations"""
         duration_sum = 0
+        # Try: if duration == None raise exception
         for pulse in xrange(self.duration):
             duration_sum += self.interval
             self.timing_list.append(duration_sum)
         return self.timing_list
     
-    def process(self, parent_object):
+    def process_relationship(self, parent_object): 
+        """after the self.parent_object is set, determine the interval and duration for
+        self.timing_list; if no parent is assigned calculate interval from self.bpm; if
+        self.bpm is given, self.duration must also be set"""
+
         self.parent_object = parent_object
         self.calculate_interval()
         self.calculate_duration()
         self.calculate_timing_list()
         return None
             
+    def create_interval_filename_tuple_list(self):
+        """creates a tuple for each Sequence object's timing_list, containing the 
+        interval and the filename to play"""
+        self.interval_filename_tuple_list = [(interval, self.filename) for interval in self.timing_list]
+        return self.interval_filename_tuple_list
+
+        # for interval in self.timing_list:
+        #     self.interval_filename_tuple_list.append((seq.interval, seq.file_name))
+        # return self.interval_filename_tuple_list
+
         

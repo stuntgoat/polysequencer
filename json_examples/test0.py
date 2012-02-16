@@ -27,7 +27,7 @@ json_data = """
     "alias": "one",
     "relation": null,
     "bpm": 60,
-    "duration":25
+    "duration":100
 },
 {
     "parent": "one",
@@ -43,7 +43,7 @@ json_data = """
 },
 {
     "parent": "two",
-    "audio_filename": "grand_child_file_name",
+    "audio_filename": "grand_child_file_name *********************************************",
     "alias": "three",
     "relation": 
     {
