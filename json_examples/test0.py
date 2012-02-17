@@ -1,5 +1,9 @@
 
 """
+Poly Sequencer
+
+Pre-Alpha
+
 A polyrhythmic sample sequencer.
 
    The sequencer accepts JSON objects that determine the following:
@@ -16,6 +20,9 @@ A polyrhythmic sample sequencer.
 
    - the ratio of the number of pulses to play in relation to the number parent pulses: 
      "relation": {"parent": 3, "self": 5} # play 5 pulses for every 3 pulses of the parent
+
+insid
+
 """
 
 
@@ -31,12 +38,12 @@ json_data = """
 },
 {
     "parent": "one",
-    "audio_filename": "child_file_name ***********************************",
+    "audio_filename": "child_file_name",
     "alias": "two",
     "relation": 
     {
-	"parent":7,
-	"self": 5
+	"parent":2,
+	"self": 3
     },
     "duration": null,
     "bpm": null
@@ -47,8 +54,8 @@ json_data = """
     "alias": "three",
     "relation": 
     {
-	"parent":8,
-	"self": 11
+	"parent":3,
+	"self": 4
     },
     "duration": null,
     "bpm": null
