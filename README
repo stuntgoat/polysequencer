@@ -1,0 +1,34 @@
+Poly Sequencer
+
+     A polyrhythmic sample sequencer.
+
+Pre-Alpha:
+	- currently only generates a list of sequencer data from python objects
+	  [Example objects are inside the json_example directory]
+	
+	- list_sequence is able to print the filenames of the objects in the intervals calculated
+	  by batch_parser.py
+	
+	- current commandline usage: $ python list_sequence.py <JSON data file>
+	 	   	
+TODO: - need a way to play multiple overlapping audio files
+
+JSON object representation:
+   The sequencer accepts JSON objects that define the following:
+   - "parent": <string> or "root" ; the parent sequence's "alias" name to synchronize with: 
+     (if this sequence does not have a parent sequence, it is the root and no other sequence
+     can be root in the object list)
+
+   - "audio_filename": <string>; the pathname of the sample audio on disk to play.
+
+   - "alias": <string>; an alais for the sequence object.
+
+   - "relation": <object> or null; the ratio of the number of pulses to play in relation to 
+     the number parent pulses: "relation": {"parent": 3, "self": 5} # play 5 pulses 
+     for every 3 pulses of the parent.
+
+   - "bpm": <number>; interval's beats per minute. This is given if the object is the root parent.
+   - "duration": <number> or null; the number of times a pulse is played by the sequencer. 'duration' is
+     a number only if it is a root parent, otherwise it is null.
+
+
