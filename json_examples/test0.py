@@ -31,11 +31,11 @@ json_data = """
 },
 {
     "parent": "one",
-    "audio_filename": "child_file_name",
+    "audio_filename": "child_file_name ***********************************",
     "alias": "two",
     "relation": 
     {
-	"parent":4,
+	"parent":7,
 	"self": 5
     },
     "duration": null,
@@ -43,12 +43,12 @@ json_data = """
 },
 {
     "parent": "two",
-    "audio_filename": "grand_child_file_name *********************************************",
+    "audio_filename": "grand_child_file_name",
     "alias": "three",
     "relation": 
     {
-	"parent":4,
-	"self": 5
+	"parent":8,
+	"self": 11
     },
     "duration": null,
     "bpm": null
