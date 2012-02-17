@@ -76,7 +76,7 @@ class BatchSequenceParser(object):
         placeholder_list = []
         # join all lists in the sequence
         for seq in self.processed_sequence_list:
-            print("processed a sequence object: %s" % seq.filename)
+            # print("processed a sequence object: %s" % seq.filename)
             placeholder_list.extend(seq.interval_filename_tuple_list)
         # sort by interval
         self.sorted_merged_interval_filename_list = sorted(placeholder_list)
@@ -94,7 +94,6 @@ class BatchSequenceParser(object):
         # if next 2 intervals' difference is less than .00035
         threshold = abs(candidate_tuple[0] - next_element[0])
         if ((threshold < .00035) or (threshold == 0)):
-            print(threshold)
             # conjoin tuples and call conjoin_tuples
             candidate_tuple[1].extend(next_element[1])
             return self._conjoin_tuples(candidate_tuple, tuple_list, finished_list)
