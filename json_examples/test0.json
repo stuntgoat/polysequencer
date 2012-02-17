@@ -1,0 +1,34 @@
+[
+{
+    "parent": null,
+    "audio_filename": "root_parent_file_name",
+    "alias": "one",
+    "relation": null,
+    "bpm": 60,
+    "duration":100
+},
+{
+    "parent": "one",
+    "audio_filename": "child_file_name",
+    "alias": "two",
+    "relation": 
+    {
+	"parent":7,
+	"self": 5
+    },
+    "duration": null,
+    "bpm": null
+},
+{
+    "parent": "two",
+    "audio_filename": "grand_child_file_name",
+    "alias": "three",
+    "relation": 
+    {
+	"parent":8,
+	"self": 11
+    },
+    "duration": null,
+    "bpm": null
+}
+]
