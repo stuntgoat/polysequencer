@@ -1,6 +1,9 @@
 from time import time
 from time import sleep
 import batch_parser as bp
+import sys
+import json
+
 
 def calculate_sleep(beginning_of_sequence, next_event):
     """Accepts: a Python time.time() value from the the starting point and
@@ -33,13 +36,14 @@ def print_char_in_sequence(seq_list):
             print(filename)
 
     return None
-            
 
 if __name__ == "__main__":
-    # acquire data structure of relationships
-    seq = bp.sequence_list
+    json_file = sys.argv[1]
+    open_json_file = open(json_file, 'rb')
+    sequence_list = json.load(open_json_file) 
+    open_json_file.close()
     # batch parse data structure
-    b = bp.BatchSequenceParser(seq)
+    b = bp.BatchSequenceParser(sequence_list)
     # create Sequence objects and process relationships
     b.create_sequence_objects()
     b.determine_relationships()

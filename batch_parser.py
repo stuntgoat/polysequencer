@@ -1,12 +1,5 @@
 from sequence_generator import Sequence
 import json
-from json_examples import test0
-
-## remove!!!
-# de-serialize json_data
-sequence_list = json.loads(test0.json_data)
-###
-
 
 class BatchSequenceParser(object):
     """Accepts a list of dicts and return a list of Sequence objects that 
