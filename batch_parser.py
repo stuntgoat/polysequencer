@@ -1,5 +1,4 @@
 from sequence_generator import Sequence
-import json
 
 class BatchSequenceParser(object):
     """Accepts a list of dicts and return a list of Sequence objects that 
@@ -49,7 +48,6 @@ class BatchSequenceParser(object):
             that there was no unassigned parent; also, if self.sequence_list is
             empty, return, since the list is empty"""
             
-            
             for count in range(len(self.sequence_list)):
                 if not self.sequence_list:
                     return completed_sequence_list
@@ -60,7 +58,6 @@ class BatchSequenceParser(object):
                         self.sequence_list.append(next_child)
                     else:
                         completed_sequence_list.append(processed_child)
-
             return None
 
         root_parent_index = index_of_root_parent()
@@ -117,10 +114,3 @@ class BatchSequenceParser(object):
         self.conjoined_sequence_list = self._conjoin_tuples(first_tuple, tuple_list_with_pathname_inside_list, [])
         return self.conjoined_sequence_list
 
-
-# if __name__ == "__main__":
-#     b = BatchSequenceParser(sequence_list)
-#     b.create_sequence_objects()
-#     b.determine_relationships()
-#     b.merge_sequence_lists()
-#     print(b.sorted_merged_interval_filename_list)
