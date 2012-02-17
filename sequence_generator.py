@@ -6,9 +6,6 @@ class Sequence(object):
     duration is the total count of pulses
     interval is the duration between pulses
     alias is a string name for this sequence
-    
-    
-
 
     If parent == None, self is a root parent; bpm must
     be > 0; relation_dict must == None
@@ -34,7 +31,7 @@ class Sequence(object):
             self.interval = 60.0/self.bpm
             return self.interval
         else:
-            # duration is (self.relation["parent"] * self.parent.duration) / self.relation["self"]
+            # interval is (self.relation["parent"] * self.parent.duration) / self.relation["self"]
             self.interval = ((self.relation["parent"] * self.parent_object.interval) / self.relation["self"])
             return self.interval
 
@@ -60,7 +57,6 @@ class Sequence(object):
         """after the self.parent_object is set, determine the interval and duration for
         self.timing_list; if no parent is assigned calculate interval from self.bpm; if
         self.bpm is given, self.duration must also be set"""
-
         self.parent_object = parent_object
         self.calculate_interval()
         self.calculate_duration()
@@ -73,8 +69,5 @@ class Sequence(object):
         self.interval_filename_tuple_list = [(interval, self.filename) for interval in self.timing_list]
         return self.interval_filename_tuple_list
 
-        # for interval in self.timing_list:
-        #     self.interval_filename_tuple_list.append((seq.interval, seq.file_name))
-        # return self.interval_filename_tuple_list
 
         

@@ -12,12 +12,12 @@ class BatchSequenceParser(object):
     """Accepts a list of dicts and return a list of Sequence objects that 
     are have calculated their sequence intervals based on their relationships
     with eachother."""
-    
     def __init__(self, object_list):
         self.object_list = object_list
         self.sequence_list = []
         self.processed_sequence_list = []
         self.sorted_merged_interval_filename_list = []
+        self.conjoined_sequence_list = []
 
     def create_sequence_objects(self):
         for item in self.object_list:
@@ -33,7 +33,6 @@ class BatchSequenceParser(object):
     def determine_relationships(self):
         # acquire root parent sequence
         completed_sequence_list = []        
-
         def index_of_root_parent():
             for seq in self.sequence_list:
                 if seq.parent_name == None: # root parent
@@ -75,7 +74,6 @@ class BatchSequenceParser(object):
         completed_sequence_list.append(self.sequence_list.pop(root_parent_index))
         process_children()
         self.processed_sequence_list = completed_sequence_list
-
         return None
 
     def merge_sequence_lists(self):
@@ -90,16 +88,47 @@ class BatchSequenceParser(object):
         # sort by interval
         self.sorted_merged_interval_filename_list = sorted(placeholder_list)
         return self.sorted_merged_interval_filename_list
-        
+
+    def _conjoin_tuples(self, candidate_tuple, tuple_list, finished_list):
+        """recursively iterate through tuple_list to compare the difference
+        of the candidate_tuple's first element(the interval). If the interval difference 
+        is < .00035, extend the file list in the second element of the candidate_tuple
+        to include the filename of the next element. After conjoining all elements, return
+        finished_list"""
+        if not tuple_list:
+            return finished_list
+        next_element = tuple_list.pop(0)
+        # if next 2 intervals' difference is less than .00035
+        threshold = abs(candidate_tuple[0] - next_element[0])
+        if ((threshold < .00035) or (threshold == 0)):
+            print(threshold)
+            # conjoin tuples and call conjoin_tuples
+            candidate_tuple[1].extend(next_element[1])
+            return self._conjoin_tuples(candidate_tuple, tuple_list, finished_list)
+        else: # append candidate_tuple to finished_list
+            finished_list.append(candidate_tuple)
+            # call conjoin_tuples
+            return self._conjoin_tuples(next_element, tuple_list, finished_list)
+        return None
+
+    def conjoin_close_intervals(self):
+        """conjoin tuples within merged list such that all adjancent tuples with intervals < .00035 seconds
+        are merged into a single pulse tuple that contains a list of file_name strings to 'play' at
+        the same pulse event.
+        A tuple within a_list: (1.2, 'filename')
+        Returns: a list of conjoined tuples; a tuple within this returned list: (1.2, ('filename', 'filename2'))
+        """
+        tuple_list_with_pathname_inside_list = [(x, [y]) for x, y in self.sorted_merged_interval_filename_list]
+        # print(tuple_list_with_pathname_inside_list)
+        first_tuple = tuple_list_with_pathname_inside_list.pop(0)
+        # create attribute for conjoined list
+        self.conjoined_sequence_list = self._conjoin_tuples(first_tuple, tuple_list_with_pathname_inside_list, [])
+        return self.conjoined_sequence_list
 
 
-    # return a list of all lists merged and sorted by duration from beginning of sequence
-    # def merge_lists(self)
-
-
-if __name__ == "__main__":
-    b = BatchSequenceParser(sequence_list)
-    b.create_sequence_objects()
-    b.determine_relationships()
-    b.merge_sequence_lists()
-    print(b.sorted_merged_interval_filename_list)
+# if __name__ == "__main__":
+#     b = BatchSequenceParser(sequence_list)
+#     b.create_sequence_objects()
+#     b.determine_relationships()
+#     b.merge_sequence_lists()
+#     print(b.sorted_merged_interval_filename_list)
