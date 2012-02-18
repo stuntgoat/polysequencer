@@ -7,9 +7,9 @@ class BatchSequenceParser(object):
     def __init__(self, object_list):
         self.object_list = object_list
         self.sequence_list = []
-        self.processed_sequence_list = []
-        self.sorted_merged_interval_filename_list = []
-        self.conjoined_sequence_list = []
+        self.processed_sequence = []
+        self.sorted_merged_intervals = []
+        self.conjoined_sequence = []
 
     def create_sequence_objects(self):
         for item in self.object_list:
@@ -27,7 +27,7 @@ class BatchSequenceParser(object):
         completed_sequence_list = []        
         def index_of_root_parent():
             for seq in self.sequence_list:
-                if seq.parent_name == None: # root parent
+                if not seq.parent_name: # root parent
                     seq.process_relationship(None) # determines interval and duration from passed variables
                     seq.create_interval_filename_tuple_list()
                     return self.sequence_list.index(seq)
@@ -54,7 +54,7 @@ class BatchSequenceParser(object):
                 for item in self.sequence_list:
                     next_child = self.sequence_list.pop(0)
                     processed_child = parse_child(next_child)
-                    if processed_child == None:
+                    if not processed_child:
                         self.sequence_list.append(next_child)
                     else:
                         completed_sequence_list.append(processed_child)
@@ -63,21 +63,21 @@ class BatchSequenceParser(object):
         root_parent_index = index_of_root_parent()
         completed_sequence_list.append(self.sequence_list.pop(root_parent_index))
         process_children()
-        self.processed_sequence_list = completed_sequence_list
+        self.processed_sequence = completed_sequence_list
         return None
 
     def merge_sequence_lists(self):
         """merges each Sequence objects interval_filename_tuple_list and 
         sorts by intervals of each pulse from beginning of sequence;
-        Returns: self.sorted_merged_interval_filename_list."""
+        Returns: self.sorted_merged_intervals."""
         placeholder_list = []
         # join all lists in the sequence
-        for seq in self.processed_sequence_list:
+        for seq in self.processed_sequence:
             # print("processed a sequence object: %s" % seq.filename)
             placeholder_list.extend(seq.interval_filename_tuple_list)
         # sort by interval
-        self.sorted_merged_interval_filename_list = sorted(placeholder_list)
-        return self.sorted_merged_interval_filename_list
+        self.sorted_merged_intervals = sorted(placeholder_list)
+        return self.sorted_merged_intervals
 
     def _conjoin_tuples(self, candidate_tuple, tuple_list, finished_list):
         """recursively iterate through tuple_list to compare the difference
@@ -94,11 +94,11 @@ class BatchSequenceParser(object):
             # conjoin tuples and call conjoin_tuples
             candidate_tuple[1].extend(next_element[1])
             return self._conjoin_tuples(candidate_tuple, tuple_list, finished_list)
-        else: # append candidate_tuple to finished_list
-            finished_list.append(candidate_tuple)
-            # call conjoin_tuples
-            return self._conjoin_tuples(next_element, tuple_list, finished_list)
-        return None
+
+        finished_list.append(candidate_tuple)
+        # call conjoin_tuples
+        return self._conjoin_tuples(next_element, tuple_list, finished_list)
+        
 
     def conjoin_close_intervals(self):
         """conjoin tuples within merged list such that all adjancent tuples with intervals < .00035 seconds
@@ -107,10 +107,10 @@ class BatchSequenceParser(object):
         A tuple within a_list: (1.2, 'filename')
         Returns: a list of conjoined tuples; a tuple within this returned list: (1.2, ('filename', 'filename2'))
         """
-        tuple_list_with_pathname_inside_list = [(x, [y]) for x, y in self.sorted_merged_interval_filename_list]
+        tuple_list_with_pathname_inside_list = [(x, [y]) for x, y in self.sorted_merged_intervals]
         # print(tuple_list_with_pathname_inside_list)
         first_tuple = tuple_list_with_pathname_inside_list.pop(0)
         # create attribute for conjoined list
-        self.conjoined_sequence_list = self._conjoin_tuples(first_tuple, tuple_list_with_pathname_inside_list, [])
-        return self.conjoined_sequence_list
+        self.conjoined_sequence = self._conjoin_tuples(first_tuple, tuple_list_with_pathname_inside_list, [])
+        return self.conjoined_sequence
 

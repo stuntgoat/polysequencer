@@ -15,9 +15,8 @@ def calculate_sleep(beginning_of_sequence, next_event):
     """
     if next_event == 0:
         return 0
-    else:
-        nowish = time()
-        return (beginning_of_sequence + next_event) - nowish
+    nowish = time()
+    return (beginning_of_sequence + next_event) - nowish
     
 def print_char_in_sequence(seq_list):
     """
@@ -51,4 +50,4 @@ if __name__ == "__main__":
     b.conjoin_close_intervals()
     # print(b.conjoined_sequence_list)
 
-    print_char_in_sequence(b.conjoined_sequence_list)
+    print_char_in_sequence(b.conjoined_sequences)
