@@ -50,4 +50,4 @@ if __name__ == "__main__":
     b.conjoin_close_intervals()
     # print(b.conjoined_sequence_list)
 
-    print_char_in_sequence(b.conjoined_sequences)
+    print_char_in_sequence(b.conjoined_sequence)

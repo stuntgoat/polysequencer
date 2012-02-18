@@ -74,7 +74,7 @@ class BatchSequenceParser(object):
         # join all lists in the sequence
         for seq in self.processed_sequence:
             # print("processed a sequence object: %s" % seq.filename)
-            placeholder_list.extend(seq.interval_filename_tuple_list)
+            placeholder_list.extend(seq.interval_list)
         # sort by interval
         self.sorted_merged_intervals = sorted(placeholder_list)
         return self.sorted_merged_intervals
