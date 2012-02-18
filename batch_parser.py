@@ -14,7 +14,7 @@ class BatchSequenceParser(object):
     def create_sequence_objects(self):
         for item in self.object_list:
             seq = Sequence(parent_name=item['parent'], 
-                           relation_dict=item['relation'],
+                           relation=item['relation'],
                            bpm=item['bpm'],
                            duration=item['duration'],
                            file_name=item['audio_filename'],
