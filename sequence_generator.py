@@ -59,8 +59,8 @@ class Sequence(object):
         self.calculate_duration()
         self.calculate_timing_list()
         return None
-            
-    def create_interval_filename_tuple_list(self):
+
+    def generate_sequence(self):
         """creates a tuple for each Sequence object's timing_list, containing the 
         interval and the filename to play"""
         self.interval_list = [(interval, self.filename) for interval in self.timing_list]

@@ -29,7 +29,7 @@ class BatchSequenceParser(object):
             for seq in self.sequence_list:
                 if not seq.parent_name: # root parent
                     seq.process_relationship(None) # determines interval and duration from passed variables
-                    seq.create_interval_filename_tuple_list()
+                    seq.generate_sequence()
                     return self.sequence_list.index(seq)
             # TODO: raise exception??? there is no root parent
             return None
@@ -39,7 +39,7 @@ class BatchSequenceParser(object):
                 if child.parent_name == item.alias:
                     child.parent_object = item
                     child.process_relationship(item)
-                    child.create_interval_filename_tuple_list()
+                    child.generate_sequence()
                     return child
             return None
             
