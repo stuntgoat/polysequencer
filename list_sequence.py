@@ -46,8 +46,19 @@ if __name__ == "__main__":
     # create Sequence objects and process relationships
     b.create_sequence_objects()
     b.determine_relationships()
+    
+
     b.merge_sequence_lists()
     b.conjoin_close_intervals()
     # print(b.conjoined_sequence_list)
+    f = open("chuck_test", 'wb')    
+    for seq in b.processed_sequence:
+        f.write("%s %s " % (seq.interval * 1000, seq.filename))
+    f.close()
 
-    print_char_in_sequence(b.conjoined_sequence)
+    
+    
+
+
+
+#    print_char_in_sequence(b.conjoined_sequence)

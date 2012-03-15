@@ -1,19 +1,19 @@
 [
 {
     "parent": null,
-    "audio_filename": "root_parent_file_name",
+    "audio_filename": "/Users/hyperneato/chuck/audio/upupup.wav",
     "alias": "one",
     "relation": null,
-    "bpm": 60,
+    "bpm": 67,
     "duration":100
 },
 {
     "parent": "one",
-    "audio_filename": "child_file_name",
+    "audio_filename": "/Users/hyperneato/chuck/audio/wee.wav",
     "alias": "two",
     "relation": 
     {
-	"parent":7,
+	"parent":9,
 	"self": 5
     },
     "duration": null,
@@ -21,14 +21,27 @@
 },
 {
     "parent": "two",
-    "audio_filename": "grand_child_file_name",
+    "audio_filename": "/Users/hyperneato/chuck/audio/downup.wav",
     "alias": "three",
     "relation": 
     {
 	"parent":8,
-	"self": 11
+	"self": 5
+    },
+    "duration": null,
+    "bpm": null
+},
+{
+    "parent": "three",
+    "audio_filename": "/Users/hyperneato/chuck/audio/zing.wav",
+    "alias": "four",
+    "relation": 
+    {
+	"parent":7,
+	"self": 5
     },
     "duration": null,
     "bpm": null
 }
+
 ]

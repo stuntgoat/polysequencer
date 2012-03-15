@@ -19,12 +19,13 @@ class BatchSequenceParser(object):
                            duration=item['duration'],
                            file_name=item['audio_filename'],
                            alias=item['alias'])
+
             self.sequence_list.append(seq)
         return self.sequence_list
 
     def determine_relationships(self):
         # acquire root parent sequence
-        completed_sequence_list = []        
+        sequence_objects = []        
         def index_of_root_parent():
             for seq in self.sequence_list:
                 if not seq.parent_name: # root parent
@@ -35,10 +36,10 @@ class BatchSequenceParser(object):
             return None
                 
         def parse_child(child):
-            for item in completed_sequence_list:
-                if child.parent_name == item.alias:
-                    child.parent_object = item
-                    child.process_relationship(item)
+            for parent_candidate in sequence_objects:
+                if child.parent_name == parent_candidate.alias:
+                    child.parent_object = parent_candidate
+                    child.process_relationship(parent_candidate)
                     child.generate_sequence()
                     return child
             return None
@@ -47,23 +48,21 @@ class BatchSequenceParser(object):
             """TODO: iterate over range(pow(self.sequence_list, 2)) to check
             that there was no unassigned parent; also, if self.sequence_list is
             empty, return, since the list is empty"""
-            
             for count in range(len(self.sequence_list)):
                 if not self.sequence_list:
-                    return completed_sequence_list
+                    return sequence_objects
                 for item in self.sequence_list:
                     next_child = self.sequence_list.pop(0)
                     processed_child = parse_child(next_child)
                     if not processed_child:
                         self.sequence_list.append(next_child)
                     else:
-                        completed_sequence_list.append(processed_child)
+                        sequence_objects.append(processed_child)
             return None
-
         root_parent_index = index_of_root_parent()
-        completed_sequence_list.append(self.sequence_list.pop(root_parent_index))
+        sequence_objects.append(self.sequence_list.pop(root_parent_index))
         process_children()
-        self.processed_sequence = completed_sequence_list
+        self.processed_sequence = sequence_objects
         return None
 
     def merge_sequence_lists(self):
@@ -73,13 +72,12 @@ class BatchSequenceParser(object):
         placeholder_list = []
         # join all lists in the sequence
         for seq in self.processed_sequence:
-            # print("processed a sequence object: %s" % seq.filename)
             placeholder_list.extend(seq.interval_list)
         # sort by interval
         self.sorted_merged_intervals = sorted(placeholder_list)
         return self.sorted_merged_intervals
 
-    def _conjoin_tuples(self, candidate_tuple, tuple_list, finished_list):
+    def _conjoin(self, candidate_tuple, tuple_list, finished_list):
         """recursively iterate through tuple_list to compare the difference
         of the candidate_tuple's first element(the interval). If the interval difference 
         is < .00035, extend the file list in the second element of the candidate_tuple
@@ -93,11 +91,10 @@ class BatchSequenceParser(object):
         if ((threshold < .00035) or (threshold == 0)):
             # conjoin tuples and call conjoin_tuples
             candidate_tuple[1].extend(next_element[1])
-            return self._conjoin_tuples(candidate_tuple, tuple_list, finished_list)
-
+            return self._conjoin(candidate_tuple, tuple_list, finished_list)
         finished_list.append(candidate_tuple)
         # call conjoin_tuples
-        return self._conjoin_tuples(next_element, tuple_list, finished_list)
+        return self._conjoin(next_element, tuple_list, finished_list)
         
 
     def conjoin_close_intervals(self):
@@ -105,12 +102,11 @@ class BatchSequenceParser(object):
         are merged into a single pulse tuple that contains a list of file_name strings to 'play' at
         the same pulse event.
         A tuple within a_list: (1.2, 'filename')
-        Returns: a list of conjoined tuples; a tuple within this returned list: (1.2, ('filename', 'filename2'))
+        Returns: a list of conjoined tuples; a tuple within this returned list: (1.2, ['filename', 'filename2'])
         """
-        tuple_list_with_pathname_inside_list = [(x, [y]) for x, y in self.sorted_merged_intervals]
-        # print(tuple_list_with_pathname_inside_list)
-        first_tuple = tuple_list_with_pathname_inside_list.pop(0)
+        sequenced_pulses = [(x, [y]) for x, y in self.sorted_merged_intervals]
+        first_tuple = sequenced_pulses.pop(0)
         # create attribute for conjoined list
-        self.conjoined_sequence = self._conjoin_tuples(first_tuple, tuple_list_with_pathname_inside_list, [])
+        self.conjoined_sequence = self._conjoin(first_tuple, sequenced_pulses, [])
         return self.conjoined_sequence
 
